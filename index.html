@@ -1,3 +1,397 @@
-<script>
-	window.location.href = "https://mktrealit.mx/gipsy/mobile/app/gipsy-realit.apk";
-</script>
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+    <head>
+        <meta charset="utf-8" />
+        <link
+            rel="stylesheet"
+            href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+        />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+        <style>
+            /* Estilos para los campos de entrada de texto */
+            .date-picker-input {
+                padding: 10px;
+                border-radius: 16px;
+                border: 1px solid #ccc;
+                background-color: #e1e1e3;
+                margin-bottom: 10px;
+                color: #3e3b5a;
+            }
+            .date-picker-input::placeholder {
+                color: #999; /* Cambiar el color del marcador de posición */
+            }
+			#mainContainer {
+            border-radius: 10px; /* Esquinas redondeadas */
+            /*background-color: #e2e2e4;  Color de fondo */
+            padding: 16px; /* Espaciado interno */
+            text-align: center; /* Alineación horizontal */
+            width: fit-content; /* Ancho ajustado al contenido */
+            margin: 10px auto; /* Margen automático para centrar horizontalmente */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Efecto de sombra */
+            display: flex; /* Usar flexbox para alinear elementos */
+            flex-direction: column; /* Alinear elementos en columna */
+            align-items: center; /* Alinear elementos horizontalmente */
+        }
+			
+			.itemContainer {
+            display: flex; /* Usar flexbox para alinear elementos */
+            flex-direction: column; /* Alinear elementos en columna */
+            align-items: center; /* Alinear elementos horizontalmente */
+            margin-bottom: 6px; /* Espacio inferior */
+			color: #ffffff;
+				
+        }
+
+        .number {
+            font-size: 22px; /* Tamaño de fuente más grande */
+        }
+
+        #label {
+            font-size: 14px; /* Tamaño de fuente más pequeño */
+            text-align: center; /* Alineación horizontal */
+            margin-top: 4px; /* Espacio superior */
+        }
+        </style>
+        <title>Seguros 360 - Visitas por día</title>
+    </head>
+    <!-- <body style="height: 100%; margin: 0; background-color: rgb(19, 15, 45)"> -->
+      <body style="height: 100%; margin: 0;">
+        <!-- Contenedor para los campos de entrada de texto -->
+        <div style="text-align: center; padding-top: 20px">
+            <div style="display: inline-block; margin-bottom: 10px;">
+            <!-- Campo de entrada de texto para seleccionar la fecha de inicio -->
+            <input
+                type="text"
+                id="startDate"
+                class="date-picker-input"
+                onclick="showStartDatePicker()"
+                placeholder="Fecha inicio"
+            />
+            <div id="mainContainer" style="background-color: rgb(219, 1, 131);">
+				<div class="itemContainer">
+					<div id="uniqueLabel" class="number"></div>
+				</div>
+				<div class="itemContainer">
+					<div id="label">Visitas únicas</div>
+				</div>
+    		</div>
+        </div>
+        
+        <!-- Segundo grupo: fecha de fin -->
+        <div style="display: inline-block; margin-bottom: 10px;">
+            <!-- Campo de entrada de texto para seleccionar la fecha de fin -->
+            <input
+                type="text"
+                id="endDate"
+                class="date-picker-input"
+                onclick="showEndDatePicker()"
+                placeholder="Fecha fin"
+            />
+            <!-- Texto debajo de la fecha de fin -->
+			<div id="mainContainer" style="background-color: rgb(10, 161, 251);">
+				<div class="itemContainer">
+					<div id="toalLabel" class="number"></div>
+				</div>
+				<div class="itemContainer">
+					<div id="label">Visitas totales</div>
+				</div>
+    		</div>
+        </div>
+        </div>
+        <!-- Contenedor para el gráfico -->
+        <div id="container" style="height: 80%"></div>
+
+        <script
+            type="text/javascript"
+            src="https://fastly.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"
+        ></script>
+        <script type="text/javascript">
+            var dom = document.getElementById("container")
+            // var myChart = echarts.init(dom, "dark", {
+            var myChart = echarts.init(dom, {
+                renderer: "canvas",
+                useDirtyRect: false,
+            })
+
+            var data = [
+            { fecha: "31/03/2024", total: 1, unico: 1 },
+            { fecha: "01/04/2024", total: 1345, unico: 1260 },
+                { fecha: "02/04/2024", total: 697, unico: 650 },
+                { fecha: "03/04/2024", total: 540, unico: 511 },
+                { fecha: "04/04/2024", total: 287, unico: 268 },
+                { fecha: "05/04/2024", total: 155, unico: 144 },
+                { fecha: "06/04/2024", total: 32, unico: 30 },
+                { fecha: "07/04/2024", total: 12, unico: 12 },
+                { fecha: "08/04/2024", total: 198, unico: 189 },
+                { fecha: "09/04/2024", total: 176, unico: 170 },
+                { fecha: "10/04/2024", total: 203, unico: 188 },
+                { fecha: "11/04/2024", total: 181, unico: 157 },
+                { fecha: "12/04/2024", total: 172, unico: 164 },
+                { fecha: "13/04/2024", total: 33, unico: 28 },
+                { fecha: "14/04/2024", total: 7, unico: 6 },
+                { fecha: "15/04/2024", total: 210, unico: 198 },
+                { fecha: "16/04/2024", total: 127, unico: 122 },
+                { fecha: "17/04/2024", total: 117, unico: 111 },
+                { fecha: "18/04/2024", total: 134, unico: 132 },
+				{ fecha: "19/04/2024", total: 141, unico: 134 },
+				{ fecha: "20/04/2024", total: 14, unico: 13 },
+				{ fecha: "21/04/2024", total: 2, unico: 2 },
+				{ fecha: "22/04/2024", total: 85, unico: 78 },
+				{ fecha: "23/04/2024", total: 124, unico: 122 },
+				{ fecha: "24/04/2024", total: 93, unico: 80 },
+				{ fecha: "25/04/2024", total: 119, unico: 109 },
+				{ fecha: "26/04/2024", total: 77, unico: 73 },
+				{ fecha: "27/04/2024", total: 20, unico: 18 },
+				{ fecha: "28/04/2024", total: 2, unico: 2 },
+				{ fecha: "29/04/2024", total: 43, unico: 40 },
+				{ fecha: "30/04/2024", total: 34, unico: 34 },
+				{ fecha: "01/05/2024", total: 3, unico: 1 },
+				{ fecha: "02/05/2024", total: 57, unico: 53 },
+				{ fecha: "03/05/2024", total: 78, unico: 73 },
+				{ fecha: "04/05/2024", total: 16, unico: 16 },
+				{ fecha: "05/05/2024", total: 1, unico: 1 },
+            ]
+			
+			
+			function sumarVisitas(startDate, endDate) {
+        var filteredData = data.filter(function (item) {
+            var date = moment(item.fecha, "DD/MM/YYYY");
+            return (
+                date.isSameOrAfter(startDate) &&
+                date.isSameOrBefore(endDate)
+            );
+        });
+
+        var totalUnico = 0;
+        var totalTotal = 0;
+
+        // Sumar los valores de visitas únicas y totales para cada fecha filtrada
+        filteredData.forEach(function (item) {
+            totalUnico += item.unico;
+            totalTotal += item.total;
+        });
+
+        return {
+            totalUnico: totalUnico,
+            totalTotal: totalTotal
+        };
+    }
+			
+
+            function updateChart() {
+                var app = {}
+
+                var option
+
+                var startDate = $("#startDate").datepicker("getDate")
+                var endDate = $("#endDate").datepicker("getDate")
+				
+				var { totalUnico, totalTotal } = sumarVisitas(startDate, endDate)
+				
+				console.log(totalUnico, totalTotal)
+				if(document.getElementById("toalLabel")){
+					document.getElementById("toalLabel").textContent = totalTotal;
+				}
+				
+				if(document.getElementById("uniqueLabel")){
+					document.getElementById("uniqueLabel").textContent = totalUnico;
+				}
+					
+    			
+
+                // Filtrar los datos para el rango de fechas seleccionado
+                var filteredData = data.filter(function (item) {
+                    var date = moment(item.fecha, "DD/MM/YYYY")
+                    return (
+                        date.isSameOrAfter(startDate) &&
+                        date.isSameOrBefore(endDate)
+                    )
+                })
+
+                // Actualizar las categorías del eje X
+                var xAxisData = filteredData.map(function (item) {
+                    return item.fecha
+                })
+
+                // Actualizar los valores de las series de yAxis
+                var seriesUnico = filteredData.map(function (item) {
+                    return item.unico
+                })
+
+                // Actualizar los valores de las series de yAxis
+                var seriesTotal = filteredData.map(function (item) {
+                    return item.total
+                })
+
+                var maxYValue = Math.max(...seriesUnico, ...seriesTotal)
+
+                option = {
+                    color: ["#FF0087", "#37A2FF"],
+                    title: {
+                        text: "Visitas por día",
+                    },
+                    tooltip: {
+                        trigger: "axis",
+                        axisPointer: {
+                            type: "cross",
+                            label: {
+                                backgroundColor: "#6a7985",
+                            },
+                        },
+                    },
+                    
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {},
+                        },
+                    },
+                    grid: {
+                        left: "3%",
+                        right: "4%",
+                        bottom: "3%",
+                        containLabel: true,
+                    },
+                    xAxis: [
+                        {
+                            type: "category",
+                            boundaryGap: false,
+                            data: xAxisData,
+                        },
+                    ],
+                    yAxis: [
+                        {
+                            type: "value",
+                            max: maxYValue,
+                        },
+                    ],
+                    series: [
+                        {
+                            name: "Visitas únicas",
+                            type: "line",
+                            // stack: "Total",
+                            smooth: true,
+                            lineStyle: {
+                                width: 0,
+                            },
+                            label: {
+        show: true, // Mostrar etiquetas
+        position: 'top', // Posición de la etiqueta (puedes ajustarla según tus necesidades)
+        color: 'black', // Color del texto de la etiqueta
+        formatter: '{c}', // Formato de la etiqueta (en este caso, solo mostrará el valor del punto)
+    },
+                            showSymbol: true,
+                            areaStyle: {
+                                opacity: 1,
+                                color: new echarts.graphic.LinearGradient(
+                                    0,
+                                    0,
+                                    0,
+                                    1,
+                                    [
+                                    {
+            offset: 0,
+            color: 'rgb(55, 162, 255)'
+          },
+          {
+            offset: 1,
+            color: 'rgb(116, 21, 219)'
+          }
+                                    ]
+                                ),
+                            },
+                            emphasis: {
+                                focus: "series",
+                            },
+                            data: seriesTotal,
+                        },
+                        {
+                            name: "Visitas totales",
+                            type: "line",
+                            // stack: "Total",
+                            smooth: true,
+                            lineStyle: {
+                                width: 0,
+                            },
+                            label: {
+        show: true, // Mostrar etiquetas
+        position: 'bottom', // Posición de la etiqueta (puedes ajustarla según tus necesidades)
+        color: 'black', // Color del texto de la etiqueta
+        formatter: '{c}', // Formato de la etiqueta (en este caso, solo mostrará el valor del punto)
+    },
+                            showSymbol: true,
+                            areaStyle: {
+                                opacity: 1,
+                                color: new echarts.graphic.LinearGradient(
+                                    0,
+                                    0,
+                                    0,
+                                    1,
+                                    [
+                                    {
+            offset: 0,
+            color: 'rgb(255, 0, 135)'
+          },
+          {
+            offset: 1,
+            color: 'rgb(135, 0, 157)'
+          }
+                                    ]
+                                ),
+                            },
+                            emphasis: {
+                                focus: "series",
+                            },
+                            data: seriesUnico,
+                        },
+                        
+                    ],
+                }
+
+                if (option && typeof option === "object") {
+                    myChart.setOption(option)
+                }
+            }
+
+            window.addEventListener("resize", myChart.resize)
+        </script>
+	<script>
+            // Funciones para mostrar el Datepicker
+            function showStartDatePicker() {
+                $("#startDate").datepicker("show")
+            }
+            function showEndDatePicker() {
+                $("#endDate").datepicker("show")
+            }
+
+            // Inicializar Datepicker para fecha de inicio
+            $(function () {
+                $("#startDate").datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    maxDate: "+0D", // Restringe la fecha máxima a la fecha actual
+                    dateFormat: "dd/mm/yy",
+                    onSelect: function () {
+                        updateChart() // Actualizar el gráfico al seleccionar una fecha
+                    },
+                })
+            })
+            // Inicializar Datepicker para fecha de fin
+            $(function () {
+                $("#endDate").datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    minDate: $("#startDate").datepicker("getDate"), // Restringe la fecha mínima a la fecha seleccionada en el campo de inicio
+                    maxDate: "+1M", // Restringe la fecha máxima a un mes después de la fecha actual
+                    dateFormat: "dd/mm/yy",
+                    onSelect: function () {
+                        updateChart() // Actualizar el gráfico al seleccionar una fecha
+                    },
+                })
+            })
+
+            updateChart()
+        </script>
+    </body>
+</html>
